@@ -1,41 +1,71 @@
+// Using the LM35 temperature sensor and sending data to Thingspeak using NodeMCU ESP8266
+
 #include <ESP8266WiFi.h>
 
-String apiWritekey = "6A613DRGB9KC7Q0N"; // replace with your THINGSPEAK WRITEAPI key here
-const char* ssid = "nikhil"; // your wifi SSID name
-const char* password = "oneplusone" ;// wifi pasword vipin123
- 
+String apiWritekey = "Q8ZPIGSTCIMIGAQC";
+const char* ssid = "AndroidAPF452";
+const char* password = "wintersoldier123";
+
 const char* server = "api.thingspeak.com";
-float resolution=3.3/1023;// 3.3 is the supply volt  & 1023 is max analog read value
+float resolution = 3.3/1024; // 3.3 V is the supply voltage
 WiFiClient client;
- 
+
 void setup() {
+  // put your setup code here, to run once:
   Serial.begin(9600);
   WiFi.disconnect();
   delay(10);
   WiFi.begin(ssid, password);
- 
+
   Serial.println();
   Serial.println();
-  Serial.print("Connecting to ");
-  Serial.println(ssid);
- 
-  WiFi.begin(ssid, password);
- 
-  while (WiFi.status() != WL_CONNECTED) {
+  Serial.print("Connecting To ");
+  Serial.print(ssid);
+  
+  WiFi.begin(ssid, password); 
+
+  while(WiFi.status() != WL_CONNECTED) {
     delay(500);
     Serial.print(".");
   }
-  Serial.println("");
-  Serial.print("NodeMcu connected to wifi...");
+
+  Serial.println(" ");
+  Serial.print("NodeMCU Connected to WiFi ");
   Serial.println(ssid);
   Serial.println();
-}
  
+}
+
 void loop() {
+  // put your main code here, to run repeatedly:
+
   float temp = (analogRead(A0) * resolution) * 100;
   
   if (client.connect(server,80))
   {  
     String tsData = apiWritekey;
            tsData +="&field1=";
-           tsData += String(temp);}}
+           tsData += String(temp);
+           tsData += "\r\n\r\n";
+ 
+     client.print("POST /update HTTP/1.1\n");
+     client.print("Host: api.thingspeak.com\n");
+     client.print("Connection: close\n");
+     client.print("X-THINGSPEAKAPIKEY: "+apiWritekey+"\n");
+     client.print("Content-Type: application/x-www-form-urlencoded\n");
+     client.print("Content-Length: ");
+     client.print(tsData.length());
+     client.print("\n\n");  // the 2 carriage returns indicate closing of Header fields & starting of data
+     client.print(tsData);
+ 
+     Serial.print("Temperature: ");
+     Serial.println(temp);
+     Serial.println("uploaded to Thingspeak server....");
+  }
+  client.stop();
+ 
+  Serial.println("Waiting to upload next reading...");
+  Serial.println();
+    delay(1000);
+
+}
