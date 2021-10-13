@@ -28,7 +28,7 @@ delay(4000); // wait for 4 seconds.
 digitalWrite(LED1, HIGH);
 digitalWrite(LED2,LOW);
 digitalWrite(LED3,LOW);
-delay(500); // turn the LED off.(Note that LOW is the voltage level but actually 
+delay(500); // turn the LED off.(Note that LOW is the voltage level but actually the LED will be ON)
 digitalWrite(LED1, LOW);
 digitalWrite(LED2, HIGH);
 digitalWrite(LED3,LOW);
