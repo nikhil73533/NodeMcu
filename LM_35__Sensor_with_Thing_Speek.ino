@@ -25,17 +25,10 @@ void setup() {
     delay(500);
     Serial.print(".");
   }
-  Serial.println("");
-  Serial.print("NodeMcu connected to wifi...");
-  Serial.println(ssid);
-  Serial.println();
+  
 }
  
 void loop() {
   float temp = (analogRead(A0) * resolution) * 100;
   
-  if (client.connect(server,80))
-  {  
-    String tsData = apiWritekey;
-           tsData +="&field1=";
-           tsData += String(temp);}}
+  }
