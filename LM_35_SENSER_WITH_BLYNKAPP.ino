@@ -14,13 +14,22 @@ void myTimerEvent()
 int  sensorData = analogRead(A0);
 float millivolts = (sensorData/1024.0) * 3300; //3300 is the voltage provided by NodeMCU
 float celsius = millivolts/10;
+
+  // Started serial monitor
+  
+  Serial.begin(9600);
+  Serial.print("The Serial Monitor has Arrived!");
+
+  Serial.print("The Serial Monitor has Arrived!\n");
+  delay(500);
+
 Serial.print("in DegreeC=   ");
 Serial.println(celsius);
 Blynk.virtualWrite(V0, celsius); 
 if(celsius >32)
 {
   Blynk.notify("NodeMCU-Temptrature over 32");
-   Blynk.email("nikhil73533@gmail.com", "ESP8266 Alert", "Temperature over32C!");
+   Blynk.email("nikhilkutta@gmail.com", "ESP8266 Alert", "Temperature over32C!");
 }}
 void setup()
 {
